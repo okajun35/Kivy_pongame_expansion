@@ -1,0 +1,140 @@
+#:kivy 1.0.9
+
+<PongBall>:
+    size: 50, 50 
+    canvas:
+        Ellipse:
+            source: 'image/ball01_01.png'
+            pos: self.pos
+            size: self.size          
+
+<PongPaddle>:
+    size: 25, 200
+    canvas:
+        Rectangle:
+            source: 'image/paddle1.png'
+            pos:self.pos
+            size:self.size
+
+<PongGame>: #ゲーム画面
+    ball: pong_ball
+    player1: player_left
+    player2: player_right
+    
+    canvas:
+        Rectangle:
+            source: 'image/background.jpg' #背景を変更 
+            #pos: self.center_x-5, 0
+            #size: 10, self.height
+            pos: 0, 0
+            size: self.width, self.height
+
+    Label:
+        font_size: 20  
+        center_x: root.width / 4
+        top: root.top
+        text: "Player1"
+        
+    Label:
+        font_size: 70  
+        center_x: root.width / 4
+        top: root.top - 50
+        text: str(root.player1.score)
+
+    Label:
+        font_size: 20  
+        center_x: root.width * 3 / 4
+        top: root.top
+
+        text: "Player2"
+
+    Label:
+        font_size: 70  
+        center_x: root.width * 3 / 4
+        top: root.top - 50
+        text: str(root.player2.score)
+    
+    PongBall:
+        id: pong_ball
+        center: self.parent.center
+        
+    PongPaddle:
+        id: player_left
+        x: root.x
+        center_y: root.center_y
+        
+    PongPaddle:
+        id: player_right
+        canvas:
+            Rectangle:
+                source: 'image/paddle2.png'
+                pos:self.pos
+                size:self.size
+        x: root.width-self.width
+        center_y: root.center_y
+        
+    Button:
+        id: start_button
+        size: 200, 50
+		#background_normal: 'img/iniciar-btn-normal.png'
+        #background_down: 'img/iniciar-btn-pressed.png'
+        text: 'START GAME'
+        center_x: root.width/2
+        center_y: root.height/2
+        on_press: root.start_pong()
+
+    Button:
+        id: reset_button
+        size: 200, 50
+        text: 'RESET'
+        center_x: root.width/2
+        center_y: root.height + 50
+        on_press:root.reset_pong()
+
+<StartMenu>: # メニュー（スタート画面）
+    canvas:
+        Rectangle:
+            source: 'image/start_background.jpg' # スタート画面を出す
+            size: self.width, self.height   # 画面サイズに合わす
+
+    Button: #スタートボタン
+        size_hint: 0.2, 0.1
+        center_x: root.center_x - self.width # 真ん中　－画像の幅
+        center_y: root.center_y # 画面真ん中
+        text: 'START'
+        on_release:
+            root.manager.transition.direction = 'left' 
+            root.manager.current = 'pon'
+
+    Button: # 終了ボタン
+        size_hint: 0.2, 0.1
+        center_x: root.center_x + self.width
+        center_y: root.center_y
+        text: 'END'
+        on_press: app.stop() # アプリ終了
+
+<Player1Win>:
+    canvas:
+        Rectangle:
+            source: 'image/player1_win.jpg'
+            size: self.width, self.height
+    Button:
+        size_hint: 0.2, 0.1
+        center_x: root.center_x
+        center_y: root.center_y -root.height/10 * 4
+        text: 'GO START'
+        on_press:
+            root.manager.current = "start"
+
+<Player2Win>:
+    canvas:
+        Rectangle:
+            source: 'image/player2_win.jpg'
+            size: self.width, self.height
+    Button:
+        size_hint: 0.2, 0.1
+        center_x: root.center_x
+        center_y: root.center_y -root.height/10 * 4
+        text: 'GO START'
+        on_press:
+            root.manager.current = "start"
